@@ -1,0 +1,68 @@
+package com.revature.assignforce.controllers;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.revature.assignforce.beans.Focus;
+import com.revature.assignforce.service.FocusService;
+
+@CrossOrigin
+@RestController
+public class FocusController {
+
+	@Autowired
+	FocusService focusService;
+
+	// findAll
+	@GetMapping
+	public List<Focus> getAll() {
+		return focusService.getAll();
+	}
+
+	// findOne
+	@GetMapping(value = "{id}")
+	public ResponseEntity<Focus> getById(@PathVariable("id") int id) {
+		Optional<Focus> f = focusService.findById(id);
+		if (!f.isPresent())
+			return new ResponseEntity<Focus>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Focus>(f.get(), HttpStatus.OK);
+	}
+
+	// create
+	@PostMapping
+	public ResponseEntity<Focus> add(@RequestBody Focus f) {
+		f = focusService.create(f);
+		if (f == null)
+			return new ResponseEntity<Focus>(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Focus>(f, HttpStatus.CREATED);
+	}
+
+	// update
+	@PutMapping
+	public ResponseEntity<Focus> update(@RequestBody Focus f) {
+		f = focusService.update(f);
+		if (f == null)
+			return new ResponseEntity<Focus>(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Focus>(f, HttpStatus.CREATED);
+	}
+
+	// delete
+	@DeleteMapping(value = "{id}")
+	public ResponseEntity<Focus> delete(@PathVariable("id") int id) {
+		focusService.delete(id);
+		return new ResponseEntity<Focus>(HttpStatus.CREATED);
+	}
+
+}
