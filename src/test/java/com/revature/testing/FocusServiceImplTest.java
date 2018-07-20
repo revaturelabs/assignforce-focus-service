@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,10 +57,86 @@ public class FocusServiceImplTest {
 		skillSet.add(s4);
 		skillSet.add(s5);
 		Focus f1 = new Focus(2, "Software Development", true, skillSet);
-		//List<Focus> focusList = new ArrayList<Focus>();
-		List<Focus> focusList = focusService.getAll();
-		System.out.println(focusList.size());
-		assertTrue(focusList.size() > 0);
+		Focus f2 = new Focus(4, "Software Engineering", false, skillSet);
+		Focus f3 = new Focus(6, "Software Testing", true, skillSet);
+		List<Focus> focusList = new ArrayList<Focus>();
+		focusList.add(f1);
+		focusList.add(f2);
+		focusList.add(f3);
+		Mockito.when(focusRepository.findAll()).thenReturn(focusList);
+		
+		List<Focus> testList = focusService.getAll();
+		assertTrue(focusList.size() == 3);
+	}
+	
+	@Test
+	public void findByIdTest() {
+		SkillIdHolder s1 = new SkillIdHolder(1);
+		SkillIdHolder s2 = new SkillIdHolder(2);
+		SkillIdHolder s3 = new SkillIdHolder(3);
+		SkillIdHolder s4 = new SkillIdHolder(4);
+		SkillIdHolder s5 = new SkillIdHolder(5);
+		HashSet<SkillIdHolder> skillSet = new HashSet<SkillIdHolder>();
+		skillSet.add(s1);
+		skillSet.add(s2);
+		skillSet.add(s3);
+		skillSet.add(s4);
+		skillSet.add(s5);
+		Focus f1 = new Focus(2, "Software Development", true, skillSet);
+		Optional<Focus> op1 = Optional.ofNullable(f1);
+		Mockito.when(focusRepository.findById(2)).thenReturn(op1);
+		
+		Optional<Focus> opTest = focusService.findById(2);
+		assertTrue(opTest.get().getId() == 2);
+	}
+	
+	@Test
+	public void updateTest() {
+		SkillIdHolder s1 = new SkillIdHolder(1);
+		SkillIdHolder s2 = new SkillIdHolder(2);
+		SkillIdHolder s3 = new SkillIdHolder(3);
+		SkillIdHolder s4 = new SkillIdHolder(4);
+		SkillIdHolder s5 = new SkillIdHolder(5);
+		HashSet<SkillIdHolder> skillSet = new HashSet<SkillIdHolder>();
+		skillSet.add(s1);
+		skillSet.add(s2);
+		skillSet.add(s3);
+		skillSet.add(s4);
+		skillSet.add(s5);
+		Focus f1 = new Focus(2, "Software Development", true, skillSet);
+		f1.setIsActive(false);
+		Mockito.when(focusRepository.save(f1)).thenReturn(f1);
+		
+		Focus testFocus = focusService.update(f1);
+		assertTrue(testFocus.getIsActive() == false);
+	}
+	
+	@Test
+	public void createTest() {
+		SkillIdHolder s1 = new SkillIdHolder(1);
+		SkillIdHolder s2 = new SkillIdHolder(2);
+		SkillIdHolder s3 = new SkillIdHolder(3);
+		SkillIdHolder s4 = new SkillIdHolder(4);
+		SkillIdHolder s5 = new SkillIdHolder(5);
+		HashSet<SkillIdHolder> skillSet = new HashSet<SkillIdHolder>();
+		skillSet.add(s1);
+		skillSet.add(s2);
+		skillSet.add(s3);
+		skillSet.add(s4);
+		skillSet.add(s5);
+		Focus f1 = new Focus(2, "Software Development", true, skillSet);
+		Mockito.when(focusRepository.save(f1)).thenReturn(f1);
+		
+		Focus testFocus = focusService.update(f1);
+		assertTrue(testFocus.getId() == 2);
+	}
+	
+	@Test
+	public void deleteTest() {
+		Mockito.doNothing().when(focusRepository).deleteById(5);
+		focusService.delete(5);
+		Optional<Focus> focusTest = focusService.findById(5);
+		assertFalse(focusTest.isPresent());
 	}
 
 }
