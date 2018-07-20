@@ -23,8 +23,8 @@ import org.springframework.stereotype.Component;
 public class Focus {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Batch_ID")
-	@SequenceGenerator(name = "Batch_ID", sequenceName = "Batch_ID_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FOCUS_ID")
+	@SequenceGenerator(name = "FOCUS_ID", sequenceName = "FOCUS_ID_SEQ", allocationSize = 1)
 	@Column(name = "Focus_ID")
 	private int id;
 
