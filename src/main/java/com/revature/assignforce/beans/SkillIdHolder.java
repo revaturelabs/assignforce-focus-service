@@ -9,12 +9,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Entity
-@Table(name="SKILLIDHOLDER")
+@Table(name = "SKILLIDHOLDER")
 public class SkillIdHolder {
-	
-	@Id
 
-	@Column(name="SKILL_ID")
+	@Id
+	@Column(name = "SKILL_ID")
 
 	private int skillID;
 
@@ -27,13 +26,12 @@ public class SkillIdHolder {
 		this.skillID = skillID;
 	}
 
-	public int getTrainerId() {
+	public int getSkillId() {
 		return skillID;
 	}
 
-	public void setTrainerId(int skillID) {
+	public void setSkillId(int skillID) {
 		this.skillID = skillID;
 	}
-	
-	
+
 }
