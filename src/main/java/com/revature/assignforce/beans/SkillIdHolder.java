@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class SkillIdHolder {
 	
 	@Id
-	@Column(name="SKILL_D")
+	@Column(name="SKILL_ID")
 	private int skillID;
 
 	public SkillIdHolder() {
