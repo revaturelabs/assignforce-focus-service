@@ -36,8 +36,8 @@ public class FocusController {
 	public ResponseEntity<Focus> getById(@PathVariable("id") int id) {
 		Optional<Focus> f = focusService.findById(id);
 		if (!f.isPresent())
-			return new ResponseEntity<Focus>(HttpStatus.NOT_FOUND);
-		return new ResponseEntity<Focus>(f.get(), HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(f.get(), HttpStatus.OK);
 	}
 
 	// create
@@ -45,8 +45,8 @@ public class FocusController {
 	public ResponseEntity<Focus> add(@RequestBody Focus f) {
 		f = focusService.create(f);
 		if (f == null)
-			return new ResponseEntity<Focus>(HttpStatus.BAD_REQUEST);
-		return new ResponseEntity<Focus>(f, HttpStatus.CREATED);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(f, HttpStatus.CREATED);
 	}
 
 	// update
@@ -54,15 +54,15 @@ public class FocusController {
 	public ResponseEntity<Focus> update(@RequestBody Focus f) {
 		f = focusService.update(f);
 		if (f == null)
-			return new ResponseEntity<Focus>(HttpStatus.BAD_REQUEST);
-		return new ResponseEntity<Focus>(f, HttpStatus.CREATED);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(f, HttpStatus.CREATED);
 	}
 
 	// delete
 	@DeleteMapping(value = "{id}")
 	public ResponseEntity<Focus> delete(@PathVariable("id") int id) {
 		focusService.delete(id);
-		return new ResponseEntity<Focus>(HttpStatus.CREATED);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }
