@@ -39,22 +39,11 @@ public class FocusServiceImpl implements FocusService {
 
 	@Override
 	public Focus create(Focus b) {
-		Set<SkillIdHolder> ids = new HashSet<SkillIdHolder>();
-		ids.addAll(b.getSkills());
-		b.setSkills(new HashSet<SkillIdHolder>());
-//		b = focusRepository.save(b);
-//		b.setSkills(ids);
 		return focusRepository.save(b);
 	}
 
 	@Override
 	public void delete(int id) {
-		Optional<Focus> focus = focusRepository.findById(id);
-		if(focus.isPresent()) {
-			Focus f = focus.get();
-			f.setSkills(new HashSet<SkillIdHolder>());
-			focusRepository.save(f);
-		}
 		focusRepository.deleteById(id);
 	}
 
