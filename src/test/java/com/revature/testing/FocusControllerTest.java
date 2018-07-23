@@ -155,7 +155,7 @@ public class FocusControllerTest {
 		f1.setName("SE");
 		Mockito.when(focusRepository.save(f1)).thenReturn(f1);
 		ResponseEntity<Focus> reTest = focusController.update(f1);
-		assertTrue(reTest.getBody().getName().equals("SE") && reTest.getStatusCode() == HttpStatus.CREATED);
+		assertTrue(reTest.getBody().getName().equals("SE") && reTest.getStatusCode() == HttpStatus.OK);
 	}
 	
 	@Test
