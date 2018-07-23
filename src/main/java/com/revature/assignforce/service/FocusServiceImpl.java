@@ -54,8 +54,8 @@ public class FocusServiceImpl implements FocusService {
 			Focus f = focus.get();
 			f.setSkills(new HashSet<SkillIdHolder>());
 			focusRepository.save(f);
-			focusRepository.deleteById(id);
 		}
+		focusRepository.deleteById(id);
 	}
 
 }

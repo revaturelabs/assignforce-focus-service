@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,13 +27,13 @@ public class FocusController {
 	FocusService focusService;
 
 	// findAll
-	@GetMapping
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<Focus> getAll() {
 		return focusService.getAll();
 	}
 
 	// findOne
-	@GetMapping(value = "{id}")
+	@GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Focus> getById(@PathVariable("id") int id) {
 		Optional<Focus> f = focusService.findById(id);
 		if (!f.isPresent())
@@ -41,7 +42,8 @@ public class FocusController {
 	}
 
 	// create
-	@PostMapping
+	@PostMapping (consumes = MediaType.APPLICATION_JSON_VALUE, 
+			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Focus> add(@RequestBody Focus f) {
 		f = focusService.create(f);
 		if (f == null)
@@ -50,7 +52,8 @@ public class FocusController {
 	}
 
 	// update
-	@PutMapping
+	@PutMapping (consumes = MediaType.APPLICATION_JSON_VALUE, 
+			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Focus> update(@RequestBody Focus f) {
 		f = focusService.update(f);
 		if (f == null)
@@ -59,7 +62,7 @@ public class FocusController {
 	}
 
 	// delete
-	@DeleteMapping(value = "{id}")
+	@DeleteMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Focus> delete(@PathVariable("id") int id) {
 		focusService.delete(id);
 		return new ResponseEntity<>(HttpStatus.OK);
