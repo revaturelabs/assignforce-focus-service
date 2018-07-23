@@ -55,7 +55,7 @@ public class FocusController {
 		f = focusService.update(f);
 		if (f == null)
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		return new ResponseEntity<>(f, HttpStatus.CREATED);
+		return new ResponseEntity<>(f, HttpStatus.OK);
 	}
 
 	// delete
