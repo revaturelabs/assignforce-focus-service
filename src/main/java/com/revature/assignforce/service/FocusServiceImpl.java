@@ -41,7 +41,7 @@ public class FocusServiceImpl implements FocusService {
 	public Focus create(Focus b) {
 		Set<SkillIdHolder> ids = new HashSet<SkillIdHolder>();
 		ids.addAll(b.getSkills());
-		b.setSkills(null);
+		b.setSkills(new HashSet<SkillIdHolder>());
 		b = focusRepository.save(b);
 		b.setSkills(ids);
 		return focusRepository.save(b);
