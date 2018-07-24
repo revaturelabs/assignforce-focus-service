@@ -63,7 +63,6 @@ public class FocusController {
 	@DeleteMapping(value = "{id}")
 	public ResponseEntity delete(@PathVariable("id") int id) {
 		focusService.delete(id);
-		System.out.println("Sending back");
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 

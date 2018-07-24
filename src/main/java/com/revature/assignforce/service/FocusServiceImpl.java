@@ -39,7 +39,7 @@ public class FocusServiceImpl implements FocusService {
 	public Focus update(Focus b) {
 		Set<SkillIdHolder> skills = b.getSkills();
 		if (skills == null) {
-			skills = new HashSet<SkillIdHolder>();
+			skills = new HashSet<>();
 		}
 		for (SkillIdHolder s : skills) {
 			skillRepository.save(s);
@@ -52,7 +52,7 @@ public class FocusServiceImpl implements FocusService {
 	public Focus create(Focus b) {
 		Set<SkillIdHolder> skills = b.getSkills();
 		if (skills == null) {
-			skills = new HashSet<SkillIdHolder>();
+			skills = new HashSet<>();
 		}
 		for (SkillIdHolder s : skills) {
 			skillRepository.save(s);
@@ -67,7 +67,7 @@ public class FocusServiceImpl implements FocusService {
 		if (!focus.isPresent()) {
 			return;
 		}
-		focus.get().setSkills(new HashSet<SkillIdHolder>());
+		focus.get().setSkills(new HashSet<>());
 		focusRepository.save(focus.get());
 		focusRepository.deleteById(id);
 	}
