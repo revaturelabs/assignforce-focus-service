@@ -37,6 +37,14 @@ public class FocusServiceImpl implements FocusService {
 
 	@Override
 	public Focus update(Focus b) {
+		Set<SkillIdHolder> skills = b.getSkills();
+		if (skills == null) {
+			skills = new HashSet<SkillIdHolder>();
+		}
+		for (SkillIdHolder s : skills) {
+			skillRepository.save(s);
+		}
+
 		return focusRepository.save(b);
 	}
 

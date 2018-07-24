@@ -22,6 +22,7 @@ import com.revature.assignforce.beans.Focus;
 import com.revature.assignforce.beans.SkillIdHolder;
 import com.revature.assignforce.controllers.FocusController;
 import com.revature.assignforce.repos.FocusRepository;
+import com.revature.assignforce.repos.SkillRepository;
 import com.revature.assignforce.service.FocusService;
 import com.revature.assignforce.service.FocusServiceImpl;
 
@@ -31,25 +32,32 @@ public class FocusControllerTest {
 
 	@Configuration
 	static class BatchServiceTestContextConfiguration {
-	@Bean
-	public FocusService focusService() {
-		return new FocusServiceImpl();
+		@Bean
+		public FocusService focusService() {
+			return new FocusServiceImpl();
 		}
-	@Bean
-	public FocusRepository FocusRepository() {
-		return Mockito.mock(FocusRepository.class);
+
+		@Bean
+		public FocusRepository FocusRepository() {
+			return Mockito.mock(FocusRepository.class);
 		}
-	@Bean
-	public FocusController FocusController() {
-		return new FocusController();
+
+		@Bean
+		public FocusController FocusController() {
+			return new FocusController();
+		}
+
+		@Bean
+		public SkillRepository SkillRepository() {
+			return Mockito.mock(SkillRepository.class);
+		}
 	}
-	}
-	
+
 	@Autowired
 	private FocusRepository focusRepository;
 	@Autowired
 	private FocusController focusController;
-	
+
 	@Test
 	public void getAllTest() {
 		SkillIdHolder s1 = new SkillIdHolder(1);
@@ -72,7 +80,7 @@ public class FocusControllerTest {
 		List<Focus> testList = focusController.getAll();
 		assertTrue(testList.size() == 2);
 	}
-	
+
 	@Test
 	public void getByIdTestOk() {
 		SkillIdHolder s1 = new SkillIdHolder(1);
@@ -92,13 +100,13 @@ public class FocusControllerTest {
 		ResponseEntity<Focus> reTest = focusController.getById(2);
 		assertTrue(reTest.getBody().getId() == 2 && reTest.getStatusCode() == HttpStatus.OK);
 	}
-	
+
 	@Test
 	public void getByIdTestNotFound() {
 		ResponseEntity<Focus> reTest = focusController.getById(18);
 		assertTrue(reTest.getStatusCode() == HttpStatus.NOT_FOUND);
 	}
-	
+
 	@Test
 	public void addTestCreated() {
 		SkillIdHolder s1 = new SkillIdHolder(1);
@@ -117,7 +125,7 @@ public class FocusControllerTest {
 		ResponseEntity<Focus> reTest = focusController.add(f1);
 		assertTrue(reTest.getBody().getId() == 17 && reTest.getStatusCode() == HttpStatus.CREATED);
 	}
-	
+
 	@Test
 	public void addTestBadRequest() {
 		SkillIdHolder s1 = new SkillIdHolder(1);
@@ -135,7 +143,7 @@ public class FocusControllerTest {
 		ResponseEntity<Focus> reTest = focusController.add(f1);
 		assertTrue(reTest.getStatusCode() == HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@Test
 	public void updateTestOk() {
 		SkillIdHolder s1 = new SkillIdHolder(1);
@@ -155,7 +163,7 @@ public class FocusControllerTest {
 		ResponseEntity<Focus> reTest = focusController.update(f1);
 		assertTrue(reTest.getBody().getName().equals("SE") && reTest.getStatusCode() == HttpStatus.OK);
 	}
-	
+
 	@Test
 	public void updateTestBadRequest() {
 		SkillIdHolder s1 = new SkillIdHolder(1);
@@ -174,7 +182,7 @@ public class FocusControllerTest {
 		ResponseEntity<Focus> reTest = focusController.update(f1);
 		assertTrue(reTest.getStatusCode() == HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@Test
 	public void deleteTest() {
 		Mockito.doNothing().when(focusRepository).deleteById(31);

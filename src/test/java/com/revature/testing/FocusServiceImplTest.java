@@ -19,6 +19,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.revature.assignforce.beans.Focus;
 import com.revature.assignforce.beans.SkillIdHolder;
 import com.revature.assignforce.repos.FocusRepository;
+import com.revature.assignforce.repos.SkillRepository;
 import com.revature.assignforce.service.FocusService;
 import com.revature.assignforce.service.FocusServiceImpl;
 
@@ -28,21 +29,27 @@ public class FocusServiceImplTest {
 
 	@Configuration
 	static class BatchServiceTestContextConfiguration {
-	@Bean
-	public FocusService focusService() {
-		return new FocusServiceImpl();
+		@Bean
+		public FocusService focusService() {
+			return new FocusServiceImpl();
 		}
-	@Bean
-	public FocusRepository FocusRepository() {
-		return Mockito.mock(FocusRepository.class);
+
+		@Bean
+		public FocusRepository FocusRepository() {
+			return Mockito.mock(FocusRepository.class);
+		}
+
+		@Bean
+		public SkillRepository SkillRepository() {
+			return Mockito.mock(SkillRepository.class);
 		}
 	}
-	
+
 	@Autowired
 	private FocusService focusService;
 	@Autowired
 	private FocusRepository focusRepository;
-	
+
 	@Test
 	public void getAllTest() {
 		SkillIdHolder s1 = new SkillIdHolder(1);
@@ -64,11 +71,11 @@ public class FocusServiceImplTest {
 		focusList.add(f2);
 		focusList.add(f3);
 		Mockito.when(focusRepository.findAll()).thenReturn(focusList);
-		
+
 		List<Focus> testList = focusService.getAll();
 		assertTrue(testList.size() == 3);
 	}
-	
+
 	@Test
 	public void findByIdTest() {
 		SkillIdHolder s1 = new SkillIdHolder(1);
@@ -85,11 +92,11 @@ public class FocusServiceImplTest {
 		Focus f1 = new Focus(2, "Software Development", true, skillSet);
 		Optional<Focus> op1 = Optional.ofNullable(f1);
 		Mockito.when(focusRepository.findById(2)).thenReturn(op1);
-		
+
 		Optional<Focus> opTest = focusService.findById(2);
 		assertTrue(opTest.get().getId() == 2);
 	}
-	
+
 	@Test
 	public void updateTest() {
 		SkillIdHolder s1 = new SkillIdHolder(1);
@@ -106,11 +113,11 @@ public class FocusServiceImplTest {
 		Focus f1 = new Focus(2, "Software Development", true, skillSet);
 		f1.setIsActive(false);
 		Mockito.when(focusRepository.save(f1)).thenReturn(f1);
-		
+
 		Focus testFocus = focusService.update(f1);
 		assertTrue(testFocus.getIsActive() == false);
 	}
-	
+
 	@Test
 	public void createTest() {
 		SkillIdHolder s1 = new SkillIdHolder(1);
@@ -126,11 +133,11 @@ public class FocusServiceImplTest {
 		skillSet.add(s5);
 		Focus f1 = new Focus(2, "Software Development", true, skillSet);
 		Mockito.when(focusRepository.save(f1)).thenReturn(f1);
-		
+
 		Focus testFocus = focusService.update(f1);
 		assertTrue(testFocus.getId() == 2);
 	}
-	
+
 	@Test
 	public void deleteTest() {
 		Mockito.doNothing().when(focusRepository).deleteById(5);
@@ -140,4 +147,3 @@ public class FocusServiceImplTest {
 	}
 
 }
-
