@@ -60,8 +60,9 @@ public class FocusController {
 
 	// delete
 	@DeleteMapping(value = "{id}")
-	public ResponseEntity<Focus> delete(@PathVariable("id") int id) {
+	public ResponseEntity delete(@PathVariable("id") int id) {
 		focusService.delete(id);
+		System.out.println("Sending back");
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
