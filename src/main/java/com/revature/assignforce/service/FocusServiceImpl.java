@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.revature.assignforce.beans.Focus;
 import com.revature.assignforce.beans.SkillIdHolder;
 import com.revature.assignforce.repos.FocusRepository;
+import com.revature.assignforce.repos.SkillRepository;
 
 @Transactional
 @Service
@@ -20,6 +21,9 @@ public class FocusServiceImpl implements FocusService {
 
 	@Autowired
 	private FocusRepository focusRepository;
+
+	@Autowired
+	private SkillRepository skillRepository;
 
 	@Override
 	public List<Focus> getAll() {
@@ -42,10 +46,10 @@ public class FocusServiceImpl implements FocusService {
 		if (skills == null) {
 			skills = new HashSet<SkillIdHolder>();
 		}
-		b.setSkills(new HashSet<SkillIdHolder>());
-		focusRepository.save(b);
-		b.setSkills(skills);
-		focusRepository.flush();
+		for (SkillIdHolder s : skills) {
+			skillRepository.save(s);
+		}
+
 		return focusRepository.save(b);
 	}
 
