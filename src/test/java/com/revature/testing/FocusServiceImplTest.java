@@ -66,7 +66,7 @@ public class FocusServiceImplTest {
 		Mockito.when(focusRepository.findAll()).thenReturn(focusList);
 		
 		List<Focus> testList = focusService.getAll();
-		assertTrue(focusList.size() == 3);
+		assertTrue(testList.size() == 3);
 	}
 	
 	@Test

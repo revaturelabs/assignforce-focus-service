@@ -46,8 +46,6 @@ public class FocusControllerTest {
 	}
 	
 	@Autowired
-	private FocusService focusService;
-	@Autowired
 	private FocusRepository focusRepository;
 	@Autowired
 	private FocusController focusController;
@@ -139,7 +137,7 @@ public class FocusControllerTest {
 	}
 	
 	@Test
-	public void updateTestCreated() {
+	public void updateTestOk() {
 		SkillIdHolder s1 = new SkillIdHolder(1);
 		SkillIdHolder s2 = new SkillIdHolder(2);
 		SkillIdHolder s3 = new SkillIdHolder(3);
@@ -155,7 +153,7 @@ public class FocusControllerTest {
 		f1.setName("SE");
 		Mockito.when(focusRepository.save(f1)).thenReturn(f1);
 		ResponseEntity<Focus> reTest = focusController.update(f1);
-		assertTrue(reTest.getBody().getName().equals("SE") && reTest.getStatusCode() == HttpStatus.CREATED);
+		assertTrue(reTest.getBody().getName().equals("SE") && reTest.getStatusCode() == HttpStatus.OK);
 	}
 	
 	@Test
