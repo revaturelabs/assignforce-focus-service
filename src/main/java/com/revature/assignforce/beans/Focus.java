@@ -33,7 +33,7 @@ public class Focus {
 	@Column(name = "isActive")
 	private Boolean isActive;
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "Focus_SKILLS")
 	private Set<SkillIdHolder> skills;
 
