@@ -1,6 +1,7 @@
 package com.revature.testing;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mockitoSession;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -49,6 +50,8 @@ public class FocusServiceImplTest {
 	private FocusService focusService;
 	@Autowired
 	private FocusRepository focusRepository;
+	@Autowired
+	private SkillRepository skillRepository;
 
 	@Test
 	public void getAllTest() {
@@ -117,6 +120,15 @@ public class FocusServiceImplTest {
 		Focus testFocus = focusService.update(f1);
 		assertTrue(testFocus.getIsActive() == false);
 	}
+	
+	@Test
+	public void updateTest2() {
+		Focus f1 = new Focus();
+		f1.setIsActive(true);
+		Mockito.when(focusRepository.save(f1)).thenReturn(f1);
+		Focus fTest = focusService.update(f1);
+		assertTrue(fTest.getIsActive());
+	}
 
 	@Test
 	public void createTest() {
@@ -137,6 +149,14 @@ public class FocusServiceImplTest {
 		Focus testFocus = focusService.update(f1);
 		assertTrue(testFocus.getId() == 2);
 	}
+	
+	@Test
+	public void createTest2() {
+		Focus f1 = new Focus();
+		Mockito.when(focusRepository.save(f1)).thenReturn(f1);
+		Focus fTest = focusService.create(f1);
+		assertNotNull(fTest);
+	}
 
 	@Test
 	public void deleteTest() {
@@ -144,6 +164,20 @@ public class FocusServiceImplTest {
 		focusService.delete(5);
 		Optional<Focus> focusTest = focusService.findById(5);
 		assertFalse(focusTest.isPresent());
+	}
+	
+	@Test
+	public void deleteTest2() {
+		Focus f1 = new Focus();
+		f1.setId(17);
+		Optional<Focus> op1 = Optional.ofNullable(f1);
+		Mockito.when(focusRepository.findById(17)).thenReturn(op1);
+		Mockito.doNothing().when(focusRepository).deleteById(17);
+		focusService.delete(17);
+		Optional<Focus> op2 = Optional.ofNullable(null);
+		Mockito.when(focusRepository.findById(17)).thenReturn(op2);
+		Optional<Focus> opTest = focusRepository.findById(17);
+		assertFalse(opTest.isPresent());
 	}
 
 }
