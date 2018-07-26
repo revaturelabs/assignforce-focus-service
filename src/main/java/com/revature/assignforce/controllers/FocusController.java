@@ -3,13 +3,18 @@ package com.revature.assignforce.controllers;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Validator;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,6 +30,16 @@ public class FocusController {
 
 	@Autowired
 	FocusService focusService;
+	
+    @Autowired
+    private Validator validator;
+    
+
+    // configure validator
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.setValidator(validator);
+    }
 
 	// findAll
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -44,7 +59,7 @@ public class FocusController {
 	// create
 	@PostMapping (consumes = MediaType.APPLICATION_JSON_VALUE, 
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Focus> add(@RequestBody Focus f) {
+	public ResponseEntity<Focus> add(@RequestBody @Valid Focus f) {
 		f = focusService.create(f);
 		if (f == null)
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -54,7 +69,7 @@ public class FocusController {
 	// update
 	@PutMapping (consumes = MediaType.APPLICATION_JSON_VALUE, 
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Focus> update(@RequestBody Focus f) {
+	public ResponseEntity<Focus> update(@RequestBody @Valid Focus f) {
 		f = focusService.update(f);
 		if (f == null)
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

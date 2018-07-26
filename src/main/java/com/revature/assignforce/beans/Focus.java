@@ -13,6 +13,11 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.springframework.stereotype.Component;
 
@@ -28,13 +33,20 @@ public class Focus {
 	private int id;
 
 	@Column(name = "Focus_Name")
+	@NotNull
+	@NotBlank
+	@Size(min = 1, max = 128)
 	private String name;
 
 	@Column(name = "isActive")
+	@NotNull
 	private Boolean isActive;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "Focus_SKILLS")
+	@NotNull
+	@NotEmpty
+	@Valid
 	private Set<SkillIdHolder> skills;
 
 	public Focus() {

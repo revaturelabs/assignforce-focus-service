@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Component;
 
@@ -14,7 +15,7 @@ public class SkillIdHolder {
 
 	@Id
 	@Column(name = "SKILL_ID")
-
+	@NotNull
 	private int skillID;
 
 	public SkillIdHolder() {
