@@ -1,6 +1,8 @@
 package com.revature.testing;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,6 +12,8 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +27,9 @@ import com.revature.assignforce.beans.SkillIdHolder;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 public class FocusTest {
+	
+	private static ValidatorFactory factory;
+	private static Validator validator;
 
 	@Configuration
 	static class FocusTestContextConfiguration {
@@ -30,6 +37,17 @@ public class FocusTest {
 	public Focus Focus() {
 		return new Focus();
 		}
+	}
+	
+	@BeforeClass
+	public static void createFactory() {
+        factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+	}
+	
+	@AfterClass
+	public static void closeFactory() {
+		factory.close();
 	}
 	
 	@Test
@@ -99,8 +117,6 @@ public class FocusTest {
         Focus f1 = new Focus();
 
         // validate the input
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
         Set<ConstraintViolation<Focus>> violations = validator.validate(f1);
         assertEquals(5, violations.size());
     }
@@ -123,8 +139,6 @@ public class FocusTest {
 		skillSet.add(s5);
 		f1.setSkills(skillSet);
 		
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		Validator validator = factory.getValidator();
 		Set<ConstraintViolation<Focus>> violations = validator.validate(f1);
 		assertEquals(0, violations.size());
     }

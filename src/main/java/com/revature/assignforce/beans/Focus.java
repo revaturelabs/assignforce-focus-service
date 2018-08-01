@@ -17,6 +17,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 
 import org.springframework.stereotype.Component;
@@ -30,24 +31,31 @@ public class Focus {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FOCUS_ID")
 	@SequenceGenerator(name = "FOCUS_ID", sequenceName = "FOCUS_ID_SEQ", allocationSize = 1)
 	@Column(name = "Focus_ID")
+	@Null(message = "New Focus must not have id.", groups = New.class)
+	@NotNull(message = "Existing Focus must have id.", groups = Existing.class)
 	private int id;
 
 	@Column(name = "Focus_Name")
-	@NotNull
-	@NotBlank
-	@Size(min = 1, max = 128)
+	@NotNull(message = "Focus name is required.", groups = {New.class, Existing.class})
+	@NotBlank(message = "Focus name must not be blank.", groups = {New.class, Existing.class})
+	@Size(min = 1, max = 128, message = "Focus name must be between 1 and 128 characters long.", 
+		groups = {New.class, Existing.class})
 	private String name;
 
 	@Column(name = "isActive")
-	@NotNull
+	@NotNull(message = "Focus must defnine whether it is active", groups = {New.class, Existing.class})
 	private Boolean isActive;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "Focus_SKILLS")
-	@NotNull
-	@NotEmpty
+	@NotNull(message = "Focus must have a set of skills", groups = {New.class, Existing.class})
+	@NotEmpty(message = "Focus must have a non-empty skill list", groups = {New.class, Existing.class})
 	@Valid
 	private Set<SkillIdHolder> skills;
+	
+	//Validation groups
+	public interface Existing {}
+	public interface New {}
 
 	public Focus() {
 		super();
