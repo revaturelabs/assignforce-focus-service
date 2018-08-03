@@ -125,17 +125,14 @@ public class FocusTest {
     
     @Test
     public void testValidNewFocus() {
-		Focus f1 = new Focus();
-		f1.setIsActive(true);
-		f1.setName("Java");
-		f1.setSkills(skillSet);
+		Focus f1 = new Focus(0, "Java", true, skillSet);
 		
 		Set<ConstraintViolation<Focus>> violations = validator.validate(f1, New.class);
 		assertEquals(0, violations.size());
     }
     
     @Test
-    public void testValidExistingFocus() {
+    public void testValidFocus() {
 		Focus f1 = new Focus(9, "Java", true, skillSet);
 		
 		Set<ConstraintViolation<Focus>> violations = validator.validate(f1, Existing.class);
