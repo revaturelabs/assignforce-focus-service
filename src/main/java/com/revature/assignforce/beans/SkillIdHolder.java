@@ -16,7 +16,7 @@ public class SkillIdHolder {
 	@Id
 	@Column(name = "SKILL_ID")
 	@NotNull
-	private int skillID;
+	private Integer skillID;
 
 	public SkillIdHolder() {
 		super();

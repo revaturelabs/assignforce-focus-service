@@ -14,7 +14,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -33,11 +32,10 @@ public class Focus {
 	@Column(name = "Focus_ID")
 	@Null(message = "New Focus must not have id.", groups = New.class)
 	@NotNull(message = "Existing Focus must have id.", groups = Existing.class)
-	private int id;
+	private Integer id;
 
 	@Column(name = "Focus_Name")
 	@NotNull(message = "Focus name is required.", groups = {New.class, Existing.class})
-	@NotBlank(message = "Focus name must not be blank.", groups = {New.class, Existing.class})
 	@Size(min = 1, max = 128, message = "Focus name must be between 1 and 128 characters long.", 
 		groups = {New.class, Existing.class})
 	private String name;
