@@ -14,9 +14,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Range;
@@ -33,7 +33,7 @@ public class Focus {
 	@Column(name = "Focus_ID")
 	@NotNull(message = "Focus must have id.", groups = {New.class, Existing.class})
 	@Range(min = 0, max = 0, message = "New Focus must have id of 0", groups = {New.class})
-	@Min(value = 1, message = "Existing Focus must have id of at least 1", groups = {Existing.class})
+	@Positive(message = "Existing Focus must have a positive id number.", groups = {Existing.class})
 	private Integer id;
 
 	@Column(name = "Focus_Name")
