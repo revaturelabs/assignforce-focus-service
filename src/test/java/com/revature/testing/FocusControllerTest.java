@@ -1,12 +1,15 @@
 package com.revature.testing;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -17,9 +20,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.web.client.MockRestServiceServer;
 
 import com.revature.assignforce.beans.Focus;
 import com.revature.assignforce.beans.SkillIdHolder;
+import com.revature.assignforce.commands.SkillsCommand;
 import com.revature.assignforce.controllers.FocusController;
 import com.revature.assignforce.repos.FocusRepository;
 import com.revature.assignforce.service.FocusService;
@@ -31,25 +36,40 @@ public class FocusControllerTest {
 
 	@Configuration
 	static class BatchServiceTestContextConfiguration {
-	@Bean
-	public FocusService focusService() {
-		return new FocusServiceImpl();
+		@Bean
+		public FocusService focusService() {
+			return new FocusServiceImpl();
 		}
-	@Bean
-	public FocusRepository FocusRepository() {
-		return Mockito.mock(FocusRepository.class);
+		
+		@Bean
+		public SkillsCommand skillsCommand() {
+			return new SkillsCommand();
 		}
-	@Bean
-	public FocusController FocusController() {
-		return new FocusController();
-	}
+		
+		@Bean
+		public FocusRepository focusRepository() {
+			return Mockito.mock(FocusRepository.class);
+			}
+		@Bean
+		public FocusController focusController() {
+			return new FocusController();
+		}
 	}
 	
 	@Autowired
 	private FocusRepository focusRepository;
 	@Autowired
 	private FocusController focusController;
+	@Autowired
+	private SkillsCommand skillsCommand;
 	
+	private MockRestServiceServer mockSkillsServer;
+	
+	@Before
+	public void setup() {
+		mockSkillsServer = MockRestServiceServer.bindTo(skillsCommand.getRestTemplate()).build();
+	}
+
 	@Test
 	public void getAllTest() {
 		SkillIdHolder s1 = new SkillIdHolder(1);
@@ -114,7 +134,11 @@ public class FocusControllerTest {
 		skillSet.add(s5);
 		Focus f1 = new Focus(17, "Software Engineering", false, skillSet);
 		Mockito.when(focusRepository.save(f1)).thenReturn(f1);
+		f1.getSkills().forEach((skillIdHolder) -> 
+		mockSkillsServer.expect(requestTo("http://localhost:8765/skill-service/" + skillIdHolder.getSkillId()))
+			  .andRespond(withSuccess()));
 		ResponseEntity<Focus> reTest = focusController.add(f1);
+		mockSkillsServer.verify();
 		assertTrue(reTest.getBody().getId() == 17 && reTest.getStatusCode() == HttpStatus.CREATED);
 	}
 	
@@ -132,7 +156,11 @@ public class FocusControllerTest {
 		skillSet.add(s4);
 		skillSet.add(s5);
 		Focus f1 = new Focus(18, "Software Testing", false, skillSet);
+		f1.getSkills().forEach((skillIdHolder) -> 
+		mockSkillsServer.expect(requestTo("http://localhost:8765/skill-service/" + skillIdHolder.getSkillId()))
+			  .andRespond(withSuccess()));
 		ResponseEntity<Focus> reTest = focusController.add(f1);
+		mockSkillsServer.verify();
 		assertTrue(reTest.getStatusCode() == HttpStatus.BAD_REQUEST);
 	}
 	
@@ -152,7 +180,11 @@ public class FocusControllerTest {
 		Focus f1 = new Focus(17, "Software Engineering", false, skillSet);
 		f1.setName("SE");
 		Mockito.when(focusRepository.save(f1)).thenReturn(f1);
+		f1.getSkills().forEach((skillIdHolder) -> 
+		mockSkillsServer.expect(requestTo("http://localhost:8765/skill-service/" + skillIdHolder.getSkillId()))
+			  .andRespond(withSuccess()));
 		ResponseEntity<Focus> reTest = focusController.update(f1);
+		mockSkillsServer.verify();
 		assertTrue(reTest.getBody().getName().equals("SE") && reTest.getStatusCode() == HttpStatus.OK);
 	}
 	
@@ -171,7 +203,11 @@ public class FocusControllerTest {
 		skillSet.add(s5);
 		Focus f1 = new Focus(17, "Software Engineering", false, skillSet);
 		f1.setName("Some Field");
+		f1.getSkills().forEach((skillIdHolder) -> 
+		mockSkillsServer.expect(requestTo("http://localhost:8765/skill-service/" + skillIdHolder.getSkillId()))
+			  .andRespond(withSuccess()));
 		ResponseEntity<Focus> reTest = focusController.update(f1);
+		mockSkillsServer.verify();
 		assertTrue(reTest.getStatusCode() == HttpStatus.BAD_REQUEST);
 	}
 	

@@ -27,5 +27,9 @@ public class SkillsCommand {
 	public boolean findSkillFallBack(SkillIdHolder skillIdHolder) {
 		return false;
 	}
+	
+	public RestTemplate getRestTemplate() {
+		return restTemplate;
+	}
 
 }
