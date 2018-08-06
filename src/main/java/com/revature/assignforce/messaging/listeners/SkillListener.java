@@ -13,12 +13,14 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.stereotype.Component;
 
 import com.rabbitmq.client.Channel;
 import com.revature.assignforce.beans.Focus;
 import com.revature.assignforce.beans.SkillIdHolder;
 import com.revature.assignforce.service.FocusService;
 
+@Component
 public class SkillListener {
 	
 	private FocusService focusService;
