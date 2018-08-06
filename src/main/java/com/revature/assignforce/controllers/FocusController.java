@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,7 +45,7 @@ public class FocusController {
 	// create
 	@PostMapping (consumes = MediaType.APPLICATION_JSON_VALUE, 
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Focus> add(@RequestBody Focus f) {
+	public ResponseEntity<Focus> add(@RequestBody @Validated(Focus.New.class) Focus f) {
 		f = focusService.create(f);
 		if (f == null)
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -54,7 +55,7 @@ public class FocusController {
 	// update
 	@PutMapping (consumes = MediaType.APPLICATION_JSON_VALUE, 
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Focus> update(@RequestBody Focus f) {
+	public ResponseEntity<Focus> update(@RequestBody @Validated(Focus.Existing.class) Focus f) {
 		f = focusService.update(f);
 		if (f == null)
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

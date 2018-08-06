@@ -13,7 +13,13 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Range;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,17 +31,31 @@ public class Focus {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FOCUS_ID")
 	@SequenceGenerator(name = "FOCUS_ID", sequenceName = "FOCUS_ID_SEQ", allocationSize = 1)
 	@Column(name = "Focus_ID")
-	private int id;
+	@NotNull(message = "Focus must have id.", groups = {New.class, Existing.class})
+	@Range(min = 0, max = 0, message = "New Focus must have id of 0", groups = {New.class})
+	@Positive(message = "Existing Focus must have a positive id number.", groups = {Existing.class})
+	private Integer id;
 
 	@Column(name = "Focus_Name")
+	@NotNull(message = "Focus name is required.", groups = {New.class, Existing.class})
+	@Size(min = 1, max = 128, message = "Focus name must be between 1 and 128 characters long.", 
+		groups = {New.class, Existing.class})
 	private String name;
 
 	@Column(name = "isActive")
+	@NotNull(message = "Focus must defnine whether it is active", groups = {New.class, Existing.class})
 	private Boolean isActive;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "Focus_SKILLS")
+	@NotNull(message = "Focus must have a set of skills", groups = {New.class, Existing.class})
+	@NotEmpty(message = "Focus must have a non-empty skill list", groups = {New.class, Existing.class})
+	@Valid
 	private Set<SkillIdHolder> skills;
+	
+	//Validation groups
+	public interface Existing {}
+	public interface New {}
 
 	public Focus() {
 		super();
