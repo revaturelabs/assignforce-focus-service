@@ -71,6 +71,13 @@ public class FocusServiceImpl implements FocusService {
 		focusRepository.deleteById(id);
 	}
 	
+	/**
+	 * Used to validate all of the skills that are referenced by the focus. Using the skillsCommand,
+	 * any skills that return false when checked for validity are filtered out.
+	 * 
+	 * @param focus
+	 * @return
+	 */
 	private Focus validateSkillReferences(Focus focus) {
 		
 		focus.setSkills(focus.getSkills().stream().filter(

@@ -10,7 +10,6 @@ import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 
 @EnableDiscoveryClient
 @SpringBootApplication
-@EnableCircuitBreaker
 @EnableHystrix
 @EnableRabbit
 public class FocusServiceApplication {

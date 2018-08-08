@@ -18,6 +18,13 @@ public class SkillsCommand {
 	
 	RestTemplate restTemplate = new RestTemplate();
 	
+	/**
+	 * Sends a request to the skill-service to see if the skill is valid. If it is, true is returned
+	 * If the skill is not valid, a fall back method is called to return false.
+	 * 
+	 * @param skillIdHolder
+	 * @return
+	 */
 	@HystrixCommand(fallbackMethod = "findSkillFallBack")
 	public boolean findSkill(SkillIdHolder skillIdHolder) {
 		restTemplate.getForEntity(gatewayUrl + skillUri + skillIdHolder.getSkillId(), String.class);
