@@ -1,12 +1,15 @@
 package com.revature.testing;
 
 import static org.junit.Assert.*;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -15,9 +18,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.web.client.MockRestServiceServer;
 
 import com.revature.assignforce.beans.Focus;
 import com.revature.assignforce.beans.SkillIdHolder;
+import com.revature.assignforce.commands.SkillsCommand;
+import com.revature.assignforce.controllers.FocusController;
 import com.revature.assignforce.repos.FocusRepository;
 import com.revature.assignforce.service.FocusService;
 import com.revature.assignforce.service.FocusServiceImpl;
@@ -28,13 +34,23 @@ public class FocusServiceImplTest {
 
 	@Configuration
 	static class BatchServiceTestContextConfiguration {
-	@Bean
-	public FocusService focusService() {
-		return new FocusServiceImpl();
+		@Bean
+		public FocusService focusService() {
+			return new FocusServiceImpl();
 		}
-	@Bean
-	public FocusRepository FocusRepository() {
-		return Mockito.mock(FocusRepository.class);
+		
+		@Bean
+		public SkillsCommand skillsCommand() {
+			return new SkillsCommand();
+		}
+		
+		@Bean
+		public FocusRepository focusRepository() {
+			return Mockito.mock(FocusRepository.class);
+			}
+		@Bean
+		public FocusController focusController() {
+			return new FocusController();
 		}
 	}
 	
@@ -42,6 +58,15 @@ public class FocusServiceImplTest {
 	private FocusService focusService;
 	@Autowired
 	private FocusRepository focusRepository;
+	@Autowired
+	private SkillsCommand skillsCommand;
+	
+	private MockRestServiceServer mockSkillsServer;
+	
+	@Before
+	public void setup() {
+		mockSkillsServer = MockRestServiceServer.bindTo(skillsCommand.getRestTemplate()).build();
+	}
 	
 	@Test
 	public void getAllTest() {
@@ -64,7 +89,6 @@ public class FocusServiceImplTest {
 		focusList.add(f2);
 		focusList.add(f3);
 		Mockito.when(focusRepository.findAll()).thenReturn(focusList);
-		
 		List<Focus> testList = focusService.getAll();
 		assertTrue(testList.size() == 3);
 	}
@@ -106,8 +130,11 @@ public class FocusServiceImplTest {
 		Focus f1 = new Focus(2, "Software Development", true, skillSet);
 		f1.setIsActive(false);
 		Mockito.when(focusRepository.save(f1)).thenReturn(f1);
-		
+		f1.getSkills().forEach((skillIdHolder) -> 
+		mockSkillsServer.expect(requestTo("http://localhost:8765/skill-service/" + skillIdHolder.getSkillId()))
+			  .andRespond(withSuccess()));
 		Focus testFocus = focusService.update(f1);
+		mockSkillsServer.verify();
 		assertTrue(testFocus.getIsActive() == false);
 	}
 	
@@ -126,8 +153,11 @@ public class FocusServiceImplTest {
 		skillSet.add(s5);
 		Focus f1 = new Focus(2, "Software Development", true, skillSet);
 		Mockito.when(focusRepository.save(f1)).thenReturn(f1);
-		
-		Focus testFocus = focusService.update(f1);
+		f1.getSkills().forEach((skillIdHolder) -> 
+		mockSkillsServer.expect(requestTo("http://localhost:8765/skill-service/" + skillIdHolder.getSkillId()))
+			  .andRespond(withSuccess()));
+		Focus testFocus = focusService.create(f1);
+		mockSkillsServer.verify();
 		assertTrue(testFocus.getId() == 2);
 	}
 	
